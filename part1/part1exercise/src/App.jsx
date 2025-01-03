@@ -1,7 +1,8 @@
 const Header = (props) => {
+  console.log(props)
   return (
     <div>
-      <h1>{props.info.course}</h1>
+      <h1>{props.course.name}</h1>
     </div>
   )
 }
@@ -15,12 +16,11 @@ const Part = (props) => {
 }
 
 const Content = (props) => {
-  console.log(props)
   return (
     <div>
-      <Part name = {props.info.part1} exercises = {props.info.exercises1}></Part>
-      <Part name = {props.info.part2} exercises = {props.info.exercises2}></Part>
-      <Part name = {props.info.part3} exercises = {props.info.exercises3}></Part>
+      <Part name = {props.course.parts[0].name} exercises={props.course.parts[0].exercises}></Part>
+      <Part name = {props.course.parts[1].name} exercises={props.course.parts[1].exercises}></Part>
+      <Part name = {props.course.parts[2].name} exercises={props.course.parts[2].exercises}></Part>
     </div>
   )
 }
@@ -28,27 +28,35 @@ const Content = (props) => {
 const Total = (props) => {
   return (
     <div>
-      <p>Number of exercises {props.info.exercises1 + props.info.exercises2 + props.info.exercises3}</p>
+      <p>Number of exercises: {props.course.parts[0].exercises + props.course.parts[1].exercises + props.course.parts[2].exercises}</p>
     </div>
   )
 }
 
 const App = () => {
-  const info = {
-    course : 'Half Stack application development',
-    part1 : 'Fundamentals of React',
-    exercises1 : 10,
-    part2 : 'Using props to pass data',
-    exercises2 : 7,
-    part3 : 'State of a component',
-    exercises3 : 14
+  const course = {
+    name: 'Half Stack application development',
+    parts: [
+      {
+        name: 'Fundamentals of React',
+        exercises: 10
+      },
+      {
+        name: 'Using props to pass data',
+        exercises: 7
+      },
+      {
+        name: 'State of a component',
+        exercises: 14
+      }
+    ]
   }
 
   return (
     <div>
-      <Header info={info} />
-      <Content info={info}/>
-      <Total info={info}/>
+      <Header course={course}/>
+      <Content course={course}/>
+      <Total course={course}/>
     </div>
   )
 }
