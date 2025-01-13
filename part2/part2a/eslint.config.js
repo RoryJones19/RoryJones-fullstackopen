@@ -35,12 +35,4 @@ export default [
       ],
     },
   },
-  {
-    "plugins": [
-        "react"
-     ],
-     "rules": {
-       "react/prop-types": 0
-     }
-   }
 ]
