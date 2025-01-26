@@ -6,7 +6,7 @@ import Filter from './components/Filter'
 
 const App = () => {
   const [persons, setPersons] = useState([])
-  const[shownPersons, setShownPersons] = useState(persons)
+  const[shownPersons, setShownPersons] = useState([])
 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
