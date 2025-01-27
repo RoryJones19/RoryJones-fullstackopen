@@ -41,6 +41,16 @@ const App = () => {
     setFilter('')
   }
 
+  const deletePerson = (id) => {
+    console.log('delete person called' + id)
+    phonebook.deletePerson(id)
+    .then(deletedPerson => {
+      const newPersons = persons.filter(person => person.id !== deletedPerson.id)
+      setPersons(newPersons)
+      setShownPersons(newPersons)
+    })
+  }
+
   const handleNameInput = (event) => {
     event.preventDefault()
     setNewName(event.target.value)
@@ -71,7 +81,7 @@ const App = () => {
         newNumber={newNumber}
         handleNumberInput={handleNumberInput}></PersonForm>
       <h2>Numbers</h2>
-      <Persons shownPersons={shownPersons}></Persons>
+      <Persons shownPersons={shownPersons} deletePerson={deletePerson}></Persons>
     </div>
   )
 }
