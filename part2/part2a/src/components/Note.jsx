@@ -1,7 +1,13 @@
 /* eslint-disable react/prop-types */
-const Note = ({ note }) => {
+const Note = ({ note, toggleImportance }) => {
+  const label = note.important ? 'Make unimportant' : 'Make important'
     return (
-      <li>{note.content}</li>
+      <div>
+       <li>
+          {note.content}
+          <button onClick={toggleImportance}> {label}</button>
+          </li>
+      </div>
     )
   }
   
