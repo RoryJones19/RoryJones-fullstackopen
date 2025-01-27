@@ -27,7 +27,16 @@ const App = () => {
     const newPerson = {name: newName, number: newNumber}
     
     if(persons.find(person => person.name === newName)){
-      alert(`${newName} is already a new name`)
+      if(window.confirm(newPerson.name + "is already in the phonebook, replace the old number with a new one?")) {
+        console.log("here")
+        const id = persons.find(person => person.name === newName).id
+        phonebook.updateNumber(id, newPerson)
+        .then(returnedPerson => {
+          const newPersons = persons.map(person => person.id == id ? returnedPerson : person)
+          setPersons(newPersons)
+          setShownPersons(newPersons)
+        })
+      }
     }
     else{
       phonebook.create(newPerson)
@@ -42,13 +51,16 @@ const App = () => {
   }
 
   const deletePerson = (id) => {
-    console.log('delete person called' + id)
     phonebook.deletePerson(id)
     .then(deletedPerson => {
       const newPersons = persons.filter(person => person.id !== deletedPerson.id)
       setPersons(newPersons)
       setShownPersons(newPersons)
     })
+  }
+
+  const changeNumber = (id) => {
+
   }
 
   const handleNameInput = (event) => {
