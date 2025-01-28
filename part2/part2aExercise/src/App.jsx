@@ -3,6 +3,7 @@ import axios from 'axios'
 import Persons from './components/Persons'
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
+import Notification from './components/Notification'
 import phonebook from './services/phonebook'
 
 const App = () => {
@@ -12,6 +13,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [notifMessage, setNotifMessage] = useState(null)
 
   useEffect(() => {
     phonebook.getAll()
@@ -36,6 +38,13 @@ const App = () => {
           setPersons(newPersons)
           setShownPersons(newPersons)
         })
+        .catch(error => {
+          console.log(error)
+          setNotifMessage(`${newPerson.name} has been removed from the server`)
+          setTimeout(() => {
+            setNotifMessage(null)
+          }, 3000)
+        })
       }
     }
     else{
@@ -45,6 +54,13 @@ const App = () => {
         setShownPersons(persons.concat(returnedPerson))
       })
     }
+
+    //Notification
+    console.log(newPerson)
+    setNotifMessage(`Added ${newPerson.name}`)
+    setTimeout(() => {
+      setNotifMessage(null)
+    }, 5000)
     setNewName('') 
     setNewNumber('')
     setFilter('')
@@ -57,10 +73,9 @@ const App = () => {
       setPersons(newPersons)
       setShownPersons(newPersons)
     })
-  }
-
-  const changeNumber = (id) => {
-
+    .catch(error => {
+      console.log(error)
+    })
   }
 
   const handleNameInput = (event) => {
@@ -84,6 +99,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notifMessage}></Notification>
       <Filter handleFilterInput={handleFilterInput}></Filter>
       <h3>Add New</h3>
       <PersonForm
