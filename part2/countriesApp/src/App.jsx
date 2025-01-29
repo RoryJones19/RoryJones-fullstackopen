@@ -5,30 +5,64 @@ function App() {
   const [search, setSearch] = useState('')
   const [countries, setCountries] = useState([])
   const [shownCountries, setShownCountries] = useState([])
+  const [countryVals, setCountryVals] = useState(null)
 
   useEffect(() => {
     const request = axios.get("https://studies.cs.helsinki.fi/restcountries/api/all")
-    .then(response => setCountries(response.data))
+    .then(response => response.data)
+    .then(countries => {
+      const names = countries.map((country) => country.name.common.toLowerCase())
+      setCountries(names)
+      setShownCountries(names)
+    })
   }, [])
 
   const handleInputChange = (e) => {
+    const newInput = e.toLowerCase()
     setSearch(e)
-    const names = countries.map((country) => country.name.common)
-    const shown = names.filter((name) => name)
+    setShownCountries(countries.filter((name) => name.includes(newInput)))
+  }
 
-    console.log(typeof(shown[1]))
+  const OneCountry = ({country}) => {
+    // country is just a string containing the name
+    return (
+      <p>{country}</p>
+    )
+  }
+
+  const CountriesList = ({shownCountries}) => {
+    if(shownCountries.length == 1){
+      if(!countryVals){
+        return null
+      }
+      return (
+        <OneCountry country={shownCountries[0]}></OneCountry>
+      )
+    }
+    if(shownCountries.length > 10){
+      return (
+        <p>Too many matches, specify filter</p>
+      )
+    }
+    else{
+      return (
+        shownCountries.map((country, i) => <p key={i}>{country}</p>)
+      )
+    }
+  }
+
+  if (!countries) { 
+    return null 
   }
 
   return (
-    <>
     <div>
       <li>
         <p>find countries</p>
         <input value={search} onChange={e => handleInputChange(e.target.value)}></input>
-        <p>{search}</p>
         </li>
+        <CountriesList shownCountries={shownCountries}></CountriesList>
     </div>
-    </>
   )
 }
 
