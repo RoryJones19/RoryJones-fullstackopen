@@ -2,66 +2,79 @@ import {useState, useEffect} from 'react'
 import axios from 'axios'
 
 function App() {
-  const [search, setSearch] = useState('')
+  const [input, setInput] = useState('')
   const [countries, setCountries] = useState([])
   const [shownCountries, setShownCountries] = useState([])
-  const [countryVals, setCountryVals] = useState(null)
 
   useEffect(() => {
-    const request = axios.get("https://studies.cs.helsinki.fi/restcountries/api/all")
+    console.log("use effect called")
+    axios.get("https://studies.cs.helsinki.fi/restcountries/api/all")
     .then(response => response.data)
-    .then(countries => {
-      const names = countries.map((country) => country.name.common.toLowerCase())
-      setCountries(names)
-      setShownCountries(names)
+    .then(countriesResponse => {
+      setCountries(countriesResponse)
+      setShownCountries(countriesResponse.map(country => country.name.common.toLowerCase()))
     })
   }, [])
 
-  const handleInputChange = (e) => {
-    const newInput = e.toLowerCase()
-    setSearch(e)
-    setShownCountries(countries.filter((name) => name.includes(newInput)))
+  const handleInput = (event) => {
+    console.log("handle input called")
+    event.preventDefault()
+    const newInput = event.target.value.toLowerCase()
+    setInput(newInput)
+    const shown = countries.map((country) => country.name.common.toLowerCase()).filter((name) => name.includes(newInput))
+    setShownCountries(shown)
   }
 
   const OneCountry = ({country}) => {
-    // country is just a string containing the name
+    console.log("OneCountry rendered")
+    const oneCountryObject = countries.find(it => it.name.common.toLowerCase() == country)
+    console.log(oneCountryObject)
+
     return (
-      <p>{country}</p>
+      <div>
+        <h1>{oneCountryObject.name.common}</h1>
+        <p>Capital {oneCountryObject.capital}</p>
+        <b>Languages</b>
+        <ul>
+          {Object.values(oneCountryObject.languages).map((language, i) => <li key={i}>{language}</li>)}
+        </ul>
+        <img src={oneCountryObject.flags.png}></img>
+      </div>
     )
   }
 
-  const CountriesList = ({shownCountries}) => {
-    if(shownCountries.length == 1){
-      if(!countryVals){
-        return null
-      }
-      return (
-        <OneCountry country={shownCountries[0]}></OneCountry>
-      )
+  const CountriesList = () => {
+    console.log("Countries List rendered")
+    if(shownCountries.length == 0){
+      return null
     }
     if(shownCountries.length > 10){
       return (
-        <p>Too many matches, specify filter</p>
+        <p>Too many results, specify search</p>
       )
     }
-    else{
+    else if(shownCountries.length > 1){
       return (
         shownCountries.map((country, i) => <p key={i}>{country}</p>)
       )
     }
+    else{
+      return (
+        <OneCountry country={shownCountries[0]}></OneCountry>
+      )
+    }
   }
 
-  if (!countries) { 
-    return null 
+  if(!countries){
+    return null
   }
 
   return (
     <div>
-      <li>
-        <p>find countries</p>
-        <input value={search} onChange={e => handleInputChange(e.target.value)}></input>
-        </li>
-        <CountriesList shownCountries={shownCountries}></CountriesList>
+      <p>Find a country</p>
+      <input value={input} onChange={handleInput}></input>
+      <p>{input}</p>
+      <CountriesList></CountriesList>
     </div>
   )
 }
