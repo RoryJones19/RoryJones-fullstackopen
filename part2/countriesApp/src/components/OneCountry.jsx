@@ -1,4 +1,5 @@
 import {useState, useEffect} from 'react'
+import CountryWeather from './CountryWeather'
 import axios from 'axios'
 
 const OneCountry = ({country, show}) => {
@@ -6,12 +7,14 @@ const OneCountry = ({country, show}) => {
     const [oneCountryObject, setOneCountryObject] = useState(null)
     const [shown, setShown] = useState(show)
 
+    const api_key = import.meta.env.VITE_SOME_KEY
+
     useEffect(() => {
         console.log('one country use effect called')
         axios.get(`https://studies.cs.helsinki.fi/restcountries/api/name/${country}`)
         .then(response => response.data)
         .then(countryVal => setOneCountryObject(countryVal))
-    }, [country])
+    }, [country, api_key])
 
     if(shown == false){
         console.log('show check')
@@ -24,7 +27,6 @@ const OneCountry = ({country, show}) => {
     }
 
     if(!oneCountryObject){
-        console.log("onecountryobject check")
         return null
     }
     
@@ -37,6 +39,7 @@ const OneCountry = ({country, show}) => {
           {Object.values(oneCountryObject.languages).map((language, i) => <li key={i}>{language}</li>)}
         </ul>
         <img src={oneCountryObject.flags.png}></img>
+        <CountryWeather country={oneCountryObject}></CountryWeather>
         <button onClick={() => setShown(!shown)}>{shown ? 'Hide' : 'Show'}</button>
       </div>
     )
