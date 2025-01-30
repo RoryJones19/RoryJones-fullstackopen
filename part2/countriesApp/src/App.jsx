@@ -1,10 +1,12 @@
 import {useState, useEffect} from 'react'
+import OneCountry from './components/OneCountry'
 import axios from 'axios'
 
 function App() {
   const [input, setInput] = useState('')
   const [countries, setCountries] = useState([])
   const [shownCountries, setShownCountries] = useState([])
+  const [displayCountry, setDisplayCountry] = useState([])
 
   useEffect(() => {
     console.log("use effect called")
@@ -25,24 +27,6 @@ function App() {
     setShownCountries(shown)
   }
 
-  const OneCountry = ({country}) => {
-    console.log("OneCountry rendered")
-    const oneCountryObject = countries.find(it => it.name.common.toLowerCase() == country)
-    console.log(oneCountryObject)
-
-    return (
-      <div>
-        <h1>{oneCountryObject.name.common}</h1>
-        <p>Capital {oneCountryObject.capital}</p>
-        <b>Languages</b>
-        <ul>
-          {Object.values(oneCountryObject.languages).map((language, i) => <li key={i}>{language}</li>)}
-        </ul>
-        <img src={oneCountryObject.flags.png}></img>
-      </div>
-    )
-  }
-
   const CountriesList = () => {
     console.log("Countries List rendered")
     if(shownCountries.length == 0){
@@ -60,7 +44,7 @@ function App() {
     }
     else{
       return (
-        <OneCountry country={shownCountries[0]}></OneCountry>
+        <OneCountry country={shownCountries[0]} countryObject={countries.find(it => it.name.common.toLowerCase() == shownCountries[0])}></OneCountry>
       )
     }
   }
