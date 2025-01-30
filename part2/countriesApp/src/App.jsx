@@ -6,10 +6,9 @@ function App() {
   const [input, setInput] = useState('')
   const [countries, setCountries] = useState([])
   const [shownCountries, setShownCountries] = useState([])
-  const [displayCountry, setDisplayCountry] = useState([])
 
   useEffect(() => {
-    console.log("use effect called")
+    console.log("app use effect called")
     axios.get("https://studies.cs.helsinki.fi/restcountries/api/all")
     .then(response => response.data)
     .then(countriesResponse => {
@@ -39,12 +38,12 @@ function App() {
     }
     else if(shownCountries.length > 1){
       return (
-        shownCountries.map((country, i) => <p key={i}>{country}</p>)
+        shownCountries.map((country, i) => <OneCountry key={i} country={country} show={false}></OneCountry>)
       )
     }
     else{
       return (
-        <OneCountry country={shownCountries[0]} countryObject={countries.find(it => it.name.common.toLowerCase() == shownCountries[0])}></OneCountry>
+        <OneCountry country={shownCountries[0]} show={true}></OneCountry>
       )
     }
   }
