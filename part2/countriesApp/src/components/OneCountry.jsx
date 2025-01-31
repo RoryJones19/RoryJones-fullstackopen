@@ -7,14 +7,12 @@ const OneCountry = ({country, show}) => {
     const [oneCountryObject, setOneCountryObject] = useState(null)
     const [shown, setShown] = useState(show)
 
-    const api_key = import.meta.env.VITE_SOME_KEY
-
     useEffect(() => {
         console.log('one country use effect called')
         axios.get(`https://studies.cs.helsinki.fi/restcountries/api/name/${country}`)
         .then(response => response.data)
         .then(countryVal => setOneCountryObject(countryVal))
-    }, [country, api_key])
+    }, [country])
 
     if(shown == false){
         console.log('show check')
